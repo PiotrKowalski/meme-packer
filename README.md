@@ -1,1 +1,88 @@
-meme-packer
+# Meme packer
+### Problem
+Due to Article 13 memes became illegal so people started using USB sticks as a storage of memes and selling them for caps. Every meme is identified by a name, a size, given in MiB, and its market price. Help people who sells memes and write a function to maximize the profit. 
+### Solution 
+This task is example of knapsack problem for which many of implementations can be found on the Internet. I decided not to solve this problem using these implementantions and I approached the problem differently. I used inbuilt function combinations from itertools module.
+### Steps
+Firstly, I convert USB size from GiB to MiB and filter meme database out from duplicates using set() and then I restore list
+```python
+usb_size = usb_size*(1024)
+memes = list(set(memes))
+```
+I sort the list by profitability
+```
+memes.sort(key=lambda item: item[2]/item[1], reverse=True)
+```
+Then, I create list of all possible combinations except the ones which would not fit in a USB stick.
+This stage could be optimisied due to huge impact on the speed of the code.
+```python
+filtred_memes = []
+for i, meme in enumerate(memes):
+    filtred_memes.append([list(i) for i in combinations(memes, len(memes) - i) if
+                          sum([k[1] for k in list(i)]) < usb_size])
+```
+Afterwards, memes are sorted by the total cost.
+```python
+sorted_memes = []
+for i in filtred_memes:
+    if i is not None:
+        [sorted_memes.append(j) for j in i]
+sorted_memes.sort(key=lambda item: sum([i[2] for i in item]), reverse=True)
+```
+And lastly,  tuple with the total price and set of meme names is returned
+```python
+return sum([i[2] for i in sorted_memes[0]]), {i[0] for i in sorted_memes[0]}
+```
+
+### Installation
+Git clone repository on your computer and run main.py.
+If you want to test the program I recommend using venvwrapper in order to avoid getting conflicts with your local projects and then installing test dependencies from requirements_test.py. 
+
+### Things to optimize
+There is a problem with this code due to quantity od combinations in some cases. 
+For example, for this data probe which doesn't hold any duplicates number of combinations become big number:
+```python
+1,      # usb size
+[       # memes
+    ('rollsafe.jpg', 205, 6),
+    ('sad_pepe_compilation.gif', 410, 10),
+    ('yodeling_kid.avi', 126, 11),       
+    ('rollsafe.jpg', 584, 20),
+    ('sad_pepe_compilation.gif', 320, 25),
+    ('yodeling_kid.avi', 175, 16),
+    ('rollsafe.jpg', 105, 10),
+    ('sad_pepe_compilation.gif', 210, 19),
+    ('yodeling_kid.avi', 105, 14),
+    ('rollsafe.jpg', 265, 9),
+    ('sad_pepe_compilation.gif', 320, 15),
+    ('yodeling_kid.avi', 635, 11)
+]
+```
+cProfile shows this for mentioned data probe:
+Fortunately, these extraordinary ncalls are used to lower number of future unneeded usage and it can also be seen underneath. After filtering out number of calls decreased by 85% leaving only needed calls.
+```python
+         10194 function calls in 0.006 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+        1    0.000    0.000    0.006    0.006 main.py:1(<module>)
+       12    0.000    0.000    0.000    0.000 main.py:14(<lambda>)
+       12    0.003    0.000    0.005    0.000 main.py:18(<listcomp>)
+     4095    0.002    0.000    0.002    0.000 main.py:19(<listcomp>)
+       12    0.000    0.000    0.000    0.000 main.py:24(<listcomp>)
+      483    0.000    0.000    0.000    0.000 main.py:25(<lambda>)
+      483    0.000    0.000    0.000    0.000 main.py:25(<listcomp>)
+        1    0.000    0.000    0.000    0.000 main.py:27(<listcomp>)
+        1    0.000    0.000    0.000    0.000 main.py:27(<setcomp>)
+        1    0.000    0.000    0.006    0.006 main.py:4(calculate)
+        1    0.000    0.000    0.006    0.006 {built-in method builtins.exec}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       12    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+     4579    0.001    0.000    0.001    0.000 {built-in method builtins.sum}
+      495    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        2    0.000    0.000    0.001    0.000 {method 'sort' of 'list' objects}
+```
