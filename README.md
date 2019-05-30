@@ -4,7 +4,7 @@ Due to Article 13 memes became illegal so people started using USB sticks as a s
 ### Solution 
 This task is example of knapsack problem for which many of implementations can be found on the Internet. I decided not to solve this problem using these implementantions and I approached the problem differently. I used inbuilt function combinations from itertools module.
 ### Steps
-Firstly, I convert USB size from GiB to MiB and filter meme database out from duplicates using
+Firstly, I convert USB size from GiB to MiB and filter meme database out from duplicates using set() and then I restore list
 ```python
 usb_size = usb_size*(1024)
 memes = list(set(memes))
