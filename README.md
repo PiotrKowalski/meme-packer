@@ -34,6 +34,55 @@ And lastly,  tuple with the total price and set of meme names is returned
 return sum([i[2] for i in sorted_memes[0]]), {i[0] for i in sorted_memes[0]}
 ```
 
-## Installation
+### Installation
 Git clone repository on your computer and run main.py.
 If you want to test the program I recommend using venvwrapper in order to avoid getting conflicts with your local projects and then installing test dependencies from requirements_test.py. 
+
+### Things to optimize
+There is a problem with this code due to quantity od combinations in some cases. 
+For example, for this data probe which doesn't hold any duplicates number of combinations become big number:
+```python
+1,      # usb size
+[       # memes
+    ('rollsafe.jpg', 205, 6),
+    ('sad_pepe_compilation.gif', 410, 10),
+    ('yodeling_kid.avi', 126, 11),       
+    ('rollsafe.jpg', 584, 20),
+    ('sad_pepe_compilation.gif', 320, 25),
+    ('yodeling_kid.avi', 175, 16),
+    ('rollsafe.jpg', 105, 10),
+    ('sad_pepe_compilation.gif', 210, 19),
+    ('yodeling_kid.avi', 105, 14),
+    ('rollsafe.jpg', 265, 9),
+    ('sad_pepe_compilation.gif', 320, 15),
+    ('yodeling_kid.avi', 635, 11)
+]
+```
+cProfile shows this for mentioned data probe:
+Fortunately, these extraordinary ncalls are used to lower number of future unneeded usage and it can also be seen underneath. After filtering out number of calls decreased by 85% leaving only needed calls.
+```python
+         10194 function calls in 0.006 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+        1    0.000    0.000    0.006    0.006 main.py:1(<module>)
+       12    0.000    0.000    0.000    0.000 main.py:14(<lambda>)
+       12    0.003    0.000    0.005    0.000 main.py:18(<listcomp>)
+     4095    0.002    0.000    0.002    0.000 main.py:19(<listcomp>)
+       12    0.000    0.000    0.000    0.000 main.py:24(<listcomp>)
+      483    0.000    0.000    0.000    0.000 main.py:25(<lambda>)
+      483    0.000    0.000    0.000    0.000 main.py:25(<listcomp>)
+        1    0.000    0.000    0.000    0.000 main.py:27(<listcomp>)
+        1    0.000    0.000    0.000    0.000 main.py:27(<setcomp>)
+        1    0.000    0.000    0.006    0.006 main.py:4(calculate)
+        1    0.000    0.000    0.006    0.006 {built-in method builtins.exec}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       12    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+     4579    0.001    0.000    0.001    0.000 {built-in method builtins.sum}
+      495    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        2    0.000    0.000    0.001    0.000 {method 'sort' of 'list' objects}
+```
