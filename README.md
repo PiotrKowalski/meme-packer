@@ -1,6 +1,6 @@
 # Meme packer
 ### Problem
-Due to Article 13 memes became illegal so people started using USB sticks as a storage of memes and selling them for caps. Every meme is identified by a name, a size, given in MiB, and its market price. Help people who sells memes and write a function to maximize the profit. 
+Due to Article 13 memes became illegal so people started using USB sticks as a storage of memes and selling them for caps. Every meme is identified by a name, a size, given in MiB, and its market price. Help people who sells USB sticks with memes and write a function to maximize their profit. 
 ### Solution 
 This task is example of knapsack problem for which many of implementations can be found on the Internet. I decided not to solve this problem using these implementantions and I approached the problem differently. I used inbuilt function combinations from itertools module.
 ### Steps
