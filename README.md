@@ -1,6 +1,6 @@
 # Meme packer
 ### Problem
-Due to Article 13 memes became illegal so people started using USB sticks as a storage of memes and selling them for caps. Every meme is identified by a name, a size, given in MiB, and its market price. Help people who sells memes and write a function to maximize the profit. 
+Due to Article 13 memes became illegal so people started using USB sticks as a storage of memes and selling them for caps. Every meme is identified by a name, a size, given in MiB, and its market price. Help people who sells USB sticks with memes and write a function to maximize their profit. 
 ### Solution 
 This task is example of knapsack problem for which many of implementations can be found on the Internet. I decided not to solve this problem using these implementantions and I approached the problem differently. I used inbuilt function combinations from itertools module.
 ### Steps
@@ -44,18 +44,18 @@ For example, for this data probe which doesn't hold any duplicates number of com
 ```python
 1,      # usb size
 [       # memes
-    ('rollsafe.jpg', 205, 6),
+    ('rollsafe.jpg', 205, 6),        
     ('sad_pepe_compilation.gif', 410, 10),
-    ('yodeling_kid.avi', 126, 11),       
-    ('rollsafe.jpg', 584, 20),
-    ('sad_pepe_compilation.gif', 320, 25),
-    ('yodeling_kid.avi', 175, 16),
-    ('rollsafe.jpg', 105, 10),
-    ('sad_pepe_compilation.gif', 210, 19),
-    ('yodeling_kid.avi', 105, 14),
-    ('rollsafe.jpg', 265, 9),
-    ('sad_pepe_compilation.gif', 320, 15),
-    ('yodeling_kid.avi', 635, 11)
+    ('yodeling_kid.avi', 126, 11),
+    ('I_got_an_arrow.jpg', 584, 20),
+    ('sad_adventurer.gif', 320, 25),
+    ('be_like_bill.avi', 175, 16),
+    ('But_Thats_None_of_My_Business.jpg', 105, 10),
+    ('grumpy_cat.gif', 210, 19),
+    ('old_spice_guy.avi', 105, 14),
+    ('rickroll.jpg', 265, 9),
+    ('doge_the_dog.gif', 320, 15),
+    ('leekspin.avi', 635, 11)
 ]
 ```
 cProfile shows this for mentioned data probe:
