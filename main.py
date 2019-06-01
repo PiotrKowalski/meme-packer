@@ -12,16 +12,15 @@ def calculate(usb_size, memes):
     usb_size = usb_size*(1024)
     memes = list(set(memes))
     memes.sort(key=lambda item: item[2]/item[1], reverse=True)
-    filtred_memes = []
+    filtered_memes = []
 
-    for i, meme in enumerate(memes):
-        filtred_memes.append([list(i) for i in combinations(memes, len(memes) - i) if
-                              sum([k[1] for k in list(i)]) < usb_size])
+    for index, meme in enumerate(memes):
+        filtered_memes.append([list(combination) for combination in combinations(memes, index) if
+                              sum([meme[1] for meme in list(combination)]) < usb_size])
     sorted_memes = []
 
-    for i in filtred_memes:
-        if i is not None:
-            [sorted_memes.append(j) for j in i]
+    for memes in filter(lambda list_of_memes: list_of_memes is not None, filtered_memes):
+        [sorted_memes.append(meme) for meme in memes]
     sorted_memes.sort(key=lambda item: sum([i[2] for i in item]), reverse=True)
 
     return sum([i[2] for i in sorted_memes[0]]), {i[0] for i in sorted_memes[0]}
