@@ -1,4 +1,5 @@
 from itertools import combinations
+import logging
 
 
 def calculate(usb_size, memes):
@@ -6,10 +7,16 @@ def calculate(usb_size, memes):
     Returns the most valuable memes from given data and usb size
     :param int usb_size: Given in GiB. Size of USB stick
     :param List[Tuple[str, int, int]] memes: Database of memes to optimize costs
-    :return Tuple[int, Set[str]: Returns tuple with int - optimized, maximum price and set of meme names(
-    int, {name1, name2,...})
+    :return Tuple[int, Set[str]: Returns tuple with int - optimized, maximum price and set of meme names
+    (int, {name1, name2,...})
     """
-    usb_size = usb_size*(1024)
+    if not memes:
+        logging.error('No memes were given')
+        return None
+    elif usb_size <= 0:
+        logging.error('Wrong size of USB stick')
+        return None
+    usb_size *= 1024
     memes = list(set(memes))
     memes.sort(key=lambda item: item[2]/item[1], reverse=True)
     filtered_memes = []
