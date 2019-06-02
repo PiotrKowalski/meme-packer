@@ -2,11 +2,11 @@
 ### Problem
 Due to Article 13 memes became illegal so people started using USB sticks as a storage of memes and selling them for caps. Every meme is identified by a name, a size, given in MiB, and its market price. Help people who sells USB sticks with memes and write a function to maximize their profit. 
 ### Solution 
-This task is example of knapsack problem for which many of implementations can be found on the Internet. I decided not to solve this problem using these implementantions and I approached the problem differently. I used inbuilt function combinations from itertools module.
+This task is example of knapsack problem for which many of implementations can be found on the Internet. I decided not to solve this problem using these implementantions and I approached the problem differently. I used inbuilt function combinations from itertools module. Unfortunately, this approach is not the best one and its complexity is O(n<sup>k</sup>). There are better alternatives such as bottom-up or top-down recursive approach to the problem. Dynamic programming would be the best choice here. 
 ### Steps
 Firstly, I convert USB size from GiB to MiB and filter meme database out from duplicates using set() and then I restore list
 ```python
-usb_size = usb_size*(1024)
+usb_size *= 1024
 memes = list(set(memes))
 ```
 I sort the list by profitability
@@ -17,16 +17,15 @@ Then, I create list of all possible combinations except the ones which would not
 This stage could be optimisied due to huge impact on the speed of the code.
 ```python
 filtred_memes = []
-for i, meme in enumerate(memes):
-    filtred_memes.append([list(i) for i in combinations(memes, len(memes) - i) if
-                          sum([k[1] for k in list(i)]) < usb_size])
+for index, meme in enumerate(memes):
+    filtered_memes.append([list(combination) for combination in combinations(memes, len(memes)-index) if
+                          sum([meme[1] for meme in list(combination)]) <= usb_size])
 ```
 Afterwards, memes are sorted by the total cost.
 ```python
 sorted_memes = []
-for i in filtred_memes:
-    if i is not None:
-        [sorted_memes.append(j) for j in i]
+for memes in filter(lambda list_of_memes: list_of_memes, filtered_memes):
+    [sorted_memes.append(meme) for meme in memes]
 sorted_memes.sort(key=lambda item: sum([i[2] for i in item]), reverse=True)
 ```
 And lastly,  tuple with the total price and set of meme names is returned
